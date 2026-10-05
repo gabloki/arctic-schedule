@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arctic garments build schedule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style id="css">
+:root{--bg:#F2F4F3;--surface:#FFFFFF;--surface-2:#E9EDEB;--ink:#15202A;--ink-2:#4F5B64;--ink-3:#7F8A92;--line:rgba(21,32,42,.12);--line-2:rgba(21,32,42,.24);--accent:#1F6E8C;--ok:#2E7D4F;--warn:#9A5B12;--danger:#B3261E;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11171C;--surface:#1A2128;--surface-2:#232C34;--ink:#E6ECEF;--ink-2:#A9B4BB;--ink-3:#74808A;--line:rgba(230,236,239,.12);--line-2:rgba(230,236,239,.26);--accent:#62B3D2;--ok:#6CC08E;--warn:#E0A55A;--danger:#F2847B}}
+:root[data-theme="dark"]{--bg:#11171C;--surface:#1A2128;--surface-2:#232C34;--ink:#E6ECEF;--ink-2:#A9B4BB;--ink-3:#74808A;--line:rgba(230,236,239,.12);--line-2:rgba(230,236,239,.26);--accent:#62B3D2;--ok:#6CC08E;--warn:#E0A55A;--danger:#F2847B}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:var(--surface);border:1px solid var(--line-2);border-radius:6px;padding:6px 12px;cursor:pointer}
+button:hover{background:var(--surface-2)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.primary:hover{filter:brightness(1.08)}
+button.ghost{border-color:transparent;background:transparent}
+button.ghost:hover{background:var(--surface-2)}
+input,select,textarea{background:var(--surface);border:1px solid var(--line-2);border-radius:6px;padding:6px 8px;width:100%}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 48px}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.hero h1{font-size:28px;font-weight:600;letter-spacing:-.01em;margin:0;line-height:1.2}
+.hero p{margin:4px 0 0;color:var(--ink-2)}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:20px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.stat .lab{display:flex;align-items:center;gap:6px;color:var(--ink-2);font-size:12px}
+.stat .num{font-size:20px;font-weight:600;margin-top:2px}
+.stat .sub{font-size:12px;color:var(--ink-3)}
+.ok{color:var(--ok)}
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.bar .title{font-size:18px;font-weight:600;flex:1;min-width:180px;margin-left:4px}
+.seg{display:inline-flex}
+.seg button{border-radius:0}
+.seg button:first-child{border-radius:6px 0 0 6px}
+.seg button:last-child{border-radius:0 6px 6px 0;margin-left:-1px}
+.seg button.on{background:var(--surface-2);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--ink-2);margin-bottom:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.scroller{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.lanes{min-width:760px}
+.lrow{display:grid;grid-template-columns:128px repeat(5,minmax(0,1fr));border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:none}
+.lhead{border-bottom:1px solid var(--line-2)}
+.lhead div{text-align:center;padding:8px 0}
+.dname{font-size:11px;color:var(--ink-3)}
+.dnum{font-size:16px;font-weight:600;display:inline-block;min-width:30px;line-height:30px;border-radius:15px}
+.dnum.today{background:var(--accent);color:#fff}
+.who{display:flex;align-items:flex-start;gap:8px;padding:10px;font-weight:600;font-size:13px;border-right:1px solid var(--line);background:var(--surface)}
+.who .dot{margin-top:5px}
+.cell{border-left:1px solid var(--line);min-height:44px;padding:2px}
+.chip{display:block;width:calc(100% - 4px);text-align:left;margin:2px;border-radius:6px;padding:4px 7px;font-size:12px;line-height:1.35;cursor:pointer;color:var(--ink)}
+.chip:hover{filter:brightness(.97)}
+.chip svg{width:14px;height:14px;vertical-align:-2px;margin-right:4px}
+.chip .dates{display:block;font-size:11px;color:var(--ink-3)}
+.chip.c{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:2px 6px;font-size:11px}
+.chip.c .dates{display:none}
+.made h3{font-size:14px;font-weight:600;margin:20px 0 8px}
+.made .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.wkb{margin-bottom:12px}
+.wkh{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:8px 12px;background:var(--surface-2);cursor:pointer;border-bottom:1px solid var(--line);border-radius:10px 10px 0 0;font-size:13px}
+.wkh:hover{filter:brightness(.98)}
+.mini{display:inline-flex;align-items:center;gap:3px;margin-right:10px;color:var(--ink-2)}
+.mini svg{width:15px;height:15px}
+.ico{width:16px;height:16px;flex:none}
+.note{font-size:12px;color:var(--ink-3);margin-top:8px}
+.status{font-size:12px;color:var(--ink-2)}
+.status.dirty{color:var(--warn)}
+.status.err{color:var(--danger)}
+.overlay{position:fixed;inset:0;background:rgba(10,16,22,.45);display:flex;align-items:flex-start;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) 16px 24px;overflow-y:auto;z-index:10}
+.overlay[hidden]{display:none}
+.dialog{background:var(--surface);border-radius:12px;border:1px solid var(--line);width:100%;max-width:660px;padding:20px}
+.dialog h2{font-size:18px;font-weight:600;margin:0 0 14px}
+.f{margin-bottom:12px}
+.f label{display:block;font-size:12px;color:var(--ink-2);margin-bottom:4px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.checks{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.checks label{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+.checks input{width:auto}
+.outrow{display:grid;grid-template-columns:1fr 90px 36px;gap:6px;margin-bottom:6px}
+.actions{display:flex;justify-content:space-between;gap:8px;margin-top:16px;flex-wrap:wrap}
+.actions div{display:flex;gap:8px}
+.danger{color:var(--danger)}
+.err-msg{color:var(--danger);font-size:12px;margin-top:4px;min-height:16px}
+.prow{display:grid;grid-template-columns:1fr 64px;gap:6px;margin-bottom:6px}
+.prodrow{display:grid;grid-template-columns:1fr 70px 70px 1.1fr;gap:6px;margin-bottom:6px}
+.colhead{display:grid;font-size:11px;color:var(--ink-3);gap:6px;margin-bottom:4px}
+input[type=color]{padding:2px;height:34px}
+.chipsec{margin:-6px 0 22px}
+.chipsec.bottom{margin:28px 0 0}
+.chipsec.bottom h2{font-size:18px;margin-bottom:10px}
+.tlsec{margin-top:32px}
+.tlhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.tlhead h2{font-size:18px;font-weight:600;margin:0}
+.tl{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tl>svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.tln{position:absolute;transform:translateX(-50%);text-align:center;background:none;border:none;padding:0;cursor:pointer;color:var(--ink)}
+.tln:hover{background:none}
+.tln .nd{width:30px;height:30px;margin:0 auto;display:flex;align-items:center;justify-content:center;background:var(--surface);border:2.5px solid;border-radius:50%}
+.tln.garment .nd{border-radius:7px;transform:rotate(45deg)}
+.tln.garment .nd svg{transform:rotate(-45deg)}
+.tln .nd svg{width:15px;height:15px}
+.tln.prop .nd{border-style:dashed}
+.tln.done .nd{color:#fff}
+.tln .cd{margin-top:8px;font-size:12px;line-height:1.35}
+.tln .dt{font-weight:600}
+.tln .tt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tln .wh{display:inline-flex;align-items:center;gap:4px;color:var(--ink-2);font-size:11px;margin-top:2px}
+.tln:hover .tt{text-decoration:underline}
+.tlend{position:absolute;font-size:11px;font-weight:600;color:var(--ink-3);transform:translate(-50%,-50%);background:var(--surface);padding:2px 6px;border-radius:4px;border:1px solid var(--line)}
+.tlstart{transform:translate(0,-50%)}
+.chipsec h2,.made h3{font-size:14px;font-weight:600;margin:0 0 8px}
+.chipgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+details>summary{cursor:pointer;list-style:none}
+details>summary::-webkit-details-marker{display:none}
+.chipcard{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.chipcard summary{display:block}
+.chipcard .cn{display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:13px;color:var(--ink-2)}
+.chipcard .num{font-size:20px;font-weight:600}
+.chipcard .sub{font-size:12px;color:var(--ink-3)}
+.more{font-size:11px;color:var(--accent);display:inline-flex;align-items:center;gap:2px;margin-top:2px}
+.more svg{width:12px;height:12px;transition:transform .15s}
+details[open] .more svg{transform:rotate(90deg)}
+.brk{margin-top:6px;padding-top:6px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-2)}
+.brk div{display:flex;justify-content:space-between;gap:8px}
+.tchips{margin-top:6px;font-size:12px}
+.tchips summary{color:var(--accent);display:inline-flex;align-items:center;gap:4px}
+.tchips .list{margin-top:4px;color:var(--ink-2);font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:11px}
+.inv{margin-top:28px}
+.inv h2{font-size:18px;font-weight:600;margin:0 0 10px}
+.inv table{width:100%;min-width:760px;border-collapse:collapse;font-size:14px}
+.inv th{text-align:left;font-weight:600;font-size:13px;color:var(--ink-2);background:var(--surface-2);padding:10px 12px;vertical-align:bottom;border-bottom:1px solid var(--line-2)}
+.inv td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.inv tr:last-child td{border-bottom:none}
+.inv td.n{font-variant-numeric:tabular-nums}
+.inv .comp{display:flex;align-items:center;gap:8px}
+.inv .q{font-weight:600}
+.inv .tag{display:block;font-size:11px;font-weight:400;margin-top:1px}
+.inv .short{color:var(--warn)}
+.inv .met{color:var(--ok)}
+.banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--accent);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+.banner[hidden]{display:none}
+.chip .done{color:var(--ok)}
+.ctx{position:fixed;z-index:20;background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:4px;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.ctx[hidden]{display:none}
+.ctx button{display:flex;justify-content:space-between;gap:16px;width:100%;border:none;background:transparent;text-align:left;padding:7px 10px;border-radius:5px;font-size:13px}
+.ctx button:hover,.ctx button:focus-visible{background:var(--surface-2)}
+.ctx button kbd{font-family:inherit;font-size:11px;color:var(--ink-3)}
+.ctx .muted{padding:7px 10px;font-size:12px;color:var(--ink-3)}
+.ctx hr{border:none;border-top:1px solid var(--line);margin:4px 0}
+.chip.copied{outline:2px dashed var(--accent);outline-offset:1px}
+.lanes{position:relative}
+.chip{position:relative;user-select:none;-webkit-user-select:none;touch-action:none;cursor:grab}
+.chip.dragging{opacity:.35}
+.h-l,.h-r{position:absolute;top:0;bottom:0;width:9px;cursor:ew-resize}
+.h-l{left:0}.h-r{right:0}
+.h-l::after,.h-r::after{content:"";position:absolute;top:25%;bottom:25%;left:3px;width:3px;border-radius:2px;background:currentColor;opacity:0}
+.chip:hover .h-l::after,.chip:hover .h-r::after{opacity:.4}
+.preview{position:absolute;border:2px solid var(--accent);border-radius:6px;background:color-mix(in srgb,var(--accent) 14%,transparent);pointer-events:none;z-index:5;padding:2px 6px;font-size:11px;font-weight:600;color:var(--accent);overflow:hidden;white-space:nowrap}
+body.is-dragging,body.is-dragging *{cursor:grabbing!important;user-select:none}
+body.is-resizing,body.is-resizing *{cursor:ew-resize!important;user-select:none}
+@media (max-width:640px){.hero h1{font-size:22px}.row2{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script id="data" type="application/json">{"title": "Arctic garments build schedule", "subtitle": "Sam DSTL and Hefner ONR, delivery Jan 1, 2027", "people": [{"id": "H", "name": "Hamilton Osoy", "color": "#6C5FD0"}, {"id": "C", "name": "Lucas Krauss", "color": "#23917A"}, {"id": "K", "name": "Lukas", "color": "#C4477E"}, {"id": "G", "name": "Gabriel", "color": "#D1602C"}, {"id": "A", "name": "Everyone", "color": "#7C8389"}], "products": [{"id": "fc", "name": "Standard FC", "icon": "cpu", "need": 55, "start": 2, "chips": []}, {"id": "y", "name": "Y-shaped AFE FC", "icon": "fork", "need": 11, "start": 0, "chips": []}, {"id": "glove", "name": "Glove T fibers", "icon": "glove", "need": 22, "start": 3, "chips": ["0x48", "0x49", "R2", "R4", "R5", "R7"]}, {"id": "sock", "name": "Sock T fibers", "icon": "sock", "need": 22, "start": 0, "chips": ["0x48", "0x49", "R2", "R4", "R5", "R7"]}, {"id": "shirt", "name": "Shirt T fibers", "icon": "shirt", "need": 11, "start": 0, "chips": ["0x48", "0x49"]}, {"id": "bt", "name": "Beanie T fibers", "icon": "beanie", "need": 11, "start": 5, "chips": ["0x48", "0x49"]}, {"id": "ppg", "name": "Beanie PPG fibers", "icon": "pulse", "need": 11, "start": 9, "chips": []}], "tasks": [{"id": "t1", "who": "H", "short": "Glove T: PMMA, FA ×3", "text": "Glove T fibers DTPGV1.0: remove PMMA, add FA ×3", "start": "2026-10-05", "end": "2026-10-05", "product": "glove", "out": []}, {"id": "t2", "who": "C", "short": "nRF54 inventory", "text": "nRF54 inventory (MK NRF V4.0)", "start": "2026-10-05", "end": "2026-10-05", "product": "", "out": []}, {"id": "t3", "who": "H", "short": "Glove T: finish ×3", "text": "Glove T fibers: braid, heat shrink, UV resin, test ×3", "start": "2026-10-06", "end": "2026-10-06", "product": "glove", "out": []}, {"id": "t4", "who": "C", "short": "Glove T to adapter", "text": "Connect 3 glove T fibers to one female adapter", "start": "2026-10-06", "end": "2026-10-06", "product": "glove", "out": []}, {"id": "t5", "who": "C", "short": "Sock T assembly ×5", "text": "Sock T fibers DTPGV1.0: pre-draw assembly ×5", "start": "2026-10-06", "end": "2026-10-06", "product": "sock", "out": []}, {"id": "t6", "who": "K", "short": "Test glove pair 1", "text": "Glove pair 1: test arctic app and skin-temp prediction, feedback to Hamilton", "start": "2026-10-07", "end": "2026-10-07", "product": "glove", "out": []}, {"id": "t7", "who": "H", "short": "Sock T draw ×5", "text": "Sock T fibers: draw ×5 (tentative)", "start": "2026-10-07", "end": "2026-10-07", "product": "sock", "out": [{"p": "sock", "n": 5}]}, {"id": "t8", "who": "H", "short": "Sock T post-draw ×5", "text": "Sock T fibers: remove PMMA, add FA, braid, heat shrink, UV resin, test ×5", "start": "2026-10-08", "end": "2026-10-08", "product": "sock", "out": []}, {"id": "t9", "who": "H", "short": "V2.1 IMU ×7, AFE", "text": "CFDCBNIEV2.1: braid and finish IMU fibers ×7 (5 Kho beanie, 2 Sam DSTL shirt, already in stock count), AFE fibers for inventory", "start": "2026-10-09", "end": "2026-10-09", "product": "fc", "out": []}, {"id": "t10", "who": "K", "short": "Test sock pair 1", "text": "Sock pair 1: test arctic app and skin-temp prediction, feedback to Hamilton", "start": "2026-10-09", "end": "2026-10-13", "product": "sock", "out": []}, {"id": "t11", "who": "G", "short": "Skin calibration", "text": "Skin calibration coefficients (rolling)", "start": "2026-10-07", "end": "2026-10-30", "product": "", "out": []}, {"id": "t12", "who": "C", "short": "FC assembly ×7", "text": "Standard FC assembly NB BNIE V3.0 ×7 (3 glove, 4 sock)", "start": "2026-10-12", "end": "2026-10-12", "product": "fc", "out": []}, {"id": "t13", "who": "C", "short": "Y-FC assembly ×8", "text": "Y-shaped AFE FC assembly NB BNIE V3.0 ×8 (5th wire not connected to AFE)", "start": "2026-10-13", "end": "2026-10-13", "product": "y", "out": []}, {"id": "t14", "who": "H", "short": "FC draw ×15", "text": "Draw NB BNIE V3.0 ×15 (7 standard, 8 Y-shaped)", "start": "2026-10-15", "end": "2026-10-15", "product": "fc", "out": [{"p": "fc", "n": 7}, {"p": "y", "n": 8}]}, {"id": "t15", "who": "C", "short": "FC: PMMA, FA, MA ×15", "text": "FC: remove PMMA, add FA, add MA ×15", "start": "2026-10-16", "end": "2026-10-16", "product": "fc", "out": []}, {"id": "t16", "who": "H", "short": "FC finish ×15", "text": "FC: braid, heat shrink, UV resin, test ×15", "start": "2026-10-16", "end": "2026-10-16", "product": "fc", "out": []}, {"id": "t17", "who": "K", "short": "Test FC", "text": "Test FC in gloves and socks, feedback to Hamilton", "start": "2026-10-16", "end": "2026-10-19", "product": "fc", "out": []}, {"id": "t18", "who": "A", "short": "Glove design locked", "text": "Milestone: glove design locked", "start": "2026-10-19", "end": "2026-10-19", "product": "", "out": [], "milestone": true}, {"id": "t19", "who": "C", "short": "Glove T assembly ×19", "text": "Glove T fibers DTPGV1.0: pre-draw assembly ×19", "start": "2026-10-19", "end": "2026-10-19", "product": "glove", "out": []}, {"id": "t20", "who": "C", "short": "Sock T assembly ×10", "text": "Sock T fibers v2: pre-draw assembly ×10", "start": "2026-10-21", "end": "2026-10-21", "product": "sock", "out": []}, {"id": "t21", "who": "C", "short": "Shirt T assembly ×12", "text": "Shirt T fibers: pre-draw assembly ×12", "start": "2026-10-22", "end": "2026-10-22", "product": "shirt", "out": []}, {"id": "t22", "who": "C", "short": "PPG assembly ×4", "text": "Beanie PPG fibers DC_SCIPPG_V1.0: pre-draw assembly ×4", "start": "2026-10-22", "end": "2026-10-22", "product": "ppg", "out": []}, {"id": "t23", "who": "H", "short": "Glove T draw ×19", "text": "Glove T fibers: draw ×19", "start": "2026-10-22", "end": "2026-10-22", "product": "glove", "out": [{"p": "glove", "n": 19}]}, {"id": "t24", "who": "H", "short": "Sock T draw ×10", "text": "Sock T fibers v2: draw ×10 (tentative)", "start": "2026-10-22", "end": "2026-10-22", "product": "sock", "out": [{"p": "sock", "n": 10}]}, {"id": "t25", "who": "H", "short": "Glove T post-draw ×19", "text": "Glove T fibers: remove PMMA, add FA, braid, heat shrink, UV resin, test ×19", "start": "2026-10-23", "end": "2026-10-23", "product": "glove", "out": []}, {"id": "t26", "who": "H", "short": "Sock T post-draw ×10", "text": "Sock T fibers v2: remove PMMA, add FA, braid, heat shrink, UV resin, test ×10", "start": "2026-10-23", "end": "2026-10-23", "product": "sock", "out": []}, {"id": "t27", "who": "C", "short": "Beanie T assembly ×9", "text": "Beanie T fibers TMPBNIEADV2.2: pre-draw assembly ×9", "start": "2026-10-23", "end": "2026-10-23", "product": "bt", "out": []}, {"id": "t28", "who": "K", "short": "Glove integration", "text": "Glove integration", "start": "2026-10-23", "end": "2026-10-30", "product": "glove", "out": [], "gout": [{"g": "gloves", "n": 4}]}, {"id": "t29", "who": "C", "short": "FC ×11, Y-FC ×4 assembly", "text": "Assembly NB BNIE V3.0: standard FC ×11 (6 glove, 5 sock), Y-shaped AFE FC ×4", "start": "2026-10-26", "end": "2026-10-26", "product": "fc", "out": []}, {"id": "t30", "who": "H", "short": "FC draw ×15", "text": "Draw NB BNIE V3.0 ×15 (11 standard, 4 Y-shaped)", "start": "2026-10-29", "end": "2026-10-29", "product": "fc", "out": [{"p": "fc", "n": 11}, {"p": "y", "n": 4}]}, {"id": "t31", "who": "C", "short": "FC: PMMA, FA, MA ×15", "text": "FC: remove PMMA, add FA, add MA ×15", "start": "2026-10-29", "end": "2026-10-29", "product": "fc", "out": []}, {"id": "t32", "who": "H", "short": "FC finish ×15", "text": "FC: braid, heat shrink, UV resin, test ×15", "start": "2026-10-29", "end": "2026-10-29", "product": "fc", "out": []}, {"id": "t33", "who": "H", "short": "PPG draw, finish ×4", "text": "Beanie PPG fibers: draw, remove PMMA, add FA, braid, finish ×4", "start": "2026-10-29", "end": "2026-10-29", "product": "ppg", "out": [{"p": "ppg", "n": 4}]}, {"id": "t34", "who": "H", "short": "Beanie T draw, finish ×9", "text": "Beanie T fibers TMPBNIEADV2.2: draw, remove PMMA, add FA, braid, finish ×9", "start": "2026-10-29", "end": "2026-10-29", "product": "bt", "out": [{"p": "bt", "n": 9}]}, {"id": "t35", "who": "H", "short": "Shirt T draw, finish ×12", "text": "Shirt T fibers TMPBNIEADV2.2: draw, remove PMMA, add FA, braid, finish ×12", "start": "2026-10-29", "end": "2026-10-29", "product": "shirt", "out": [{"p": "shirt", "n": 12}]}, {"id": "t36", "who": "A", "short": "Inventory checkpoint", "text": "Milestone: inventory checkpoint", "start": "2026-10-30", "end": "2026-10-30", "product": "", "out": [], "milestone": true, "ms": "fiber"}, {"id": "t37", "who": "H", "short": "Sock T ×7", "text": "Remaining sock T fibers ×7", "start": "2026-11-02", "end": "2026-11-04", "product": "sock", "out": [{"p": "sock", "n": 7}], "proposed": true}, {"id": "t38", "who": "K", "short": "Beanie integration ×11", "text": "Beanie integration ×11", "start": "2026-11-02", "end": "2026-11-13", "product": "bt", "out": [], "proposed": true, "gout": [{"g": "beanies", "n": 11}]}, {"id": "t39", "who": "K", "short": "Sock integration", "text": "Sock integration", "start": "2026-11-02", "end": "2026-11-20", "product": "sock", "out": [], "proposed": true, "gout": [{"g": "socks", "n": 11}]}, {"id": "t40", "who": "G", "short": "Calibration", "text": "Calibration, remaining garments (rolling)", "start": "2026-11-02", "end": "2026-12-11", "product": "", "out": [], "proposed": true}, {"id": "t41", "who": "H", "short": "FC ×15", "text": "Fiber computers ×15", "start": "2026-11-09", "end": "2026-11-13", "product": "fc", "out": [{"p": "fc", "n": 15}], "proposed": true}, {"id": "t42", "who": "K", "short": "Shirt integration ×11", "text": "Shirt integration ×11", "start": "2026-11-09", "end": "2026-11-25", "product": "shirt", "out": [], "proposed": true, "gout": [{"g": "shirts", "n": 11}]}, {"id": "t43", "who": "H", "short": "FC ×15", "text": "Fiber computers ×15", "start": "2026-11-16", "end": "2026-11-20", "product": "fc", "out": [{"p": "fc", "n": 15}], "proposed": true}, {"id": "t44", "who": "H", "short": "FC ×5", "text": "Fiber computers ×5", "start": "2026-11-23", "end": "2026-11-24", "product": "fc", "out": [{"p": "fc", "n": 5}], "proposed": true}, {"id": "t45", "who": "K", "short": "Finish gloves, socks", "text": "Finish remaining gloves and socks", "start": "2026-11-30", "end": "2026-12-11", "product": "", "out": [], "proposed": true, "gout": [{"g": "gloves", "n": 7}]}, {"id": "t46", "who": "G", "short": "Full-kit QA", "text": "Full-kit QA and app test", "start": "2026-12-14", "end": "2026-12-18", "product": "", "out": [], "proposed": true}, {"id": "t47", "who": "A", "short": "Pack and ship", "text": "Pack and ship", "start": "2026-12-21", "end": "2026-12-23", "product": "", "out": [], "proposed": true}, {"id": "t48", "who": "A", "short": "Holiday buffer", "text": "Holiday buffer", "start": "2026-12-24", "end": "2026-12-31", "product": "", "out": [], "proposed": true}, {"id": "t49", "who": "A", "short": "Delivery", "text": "Milestone: delivery", "start": "2027-01-01", "end": "2027-01-01", "product": "", "out": [], "milestone": true}], "garments": [{"id": "gloves", "name": "Gloves (pairs)", "icon": "glove", "need": 11, "start": 0}, {"id": "socks", "name": "Socks (pairs)", "icon": "sock", "need": 11, "start": 0}, {"id": "shirts", "name": "Shirts", "icon": "shirt", "need": 11, "start": 0}, {"id": "beanies", "name": "Beanies", "icon": "beanie", "need": 11, "start": 0}]}</script>
+<script id="app">
+(function(){
+var D=JSON.parse(document.getElementById('data').textContent);
+var LSKEY='arctic-schedule-v1';
+var ICONS={
+cpu:'<rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/>',
+fork:'<circle cx="6" cy="5" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><path d="M6 7v1a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4V7M12 12v5"/>',
+glove:'<path d="M7 21v-4l-3-4a1.6 1.6 0 0 1 2.5-2l1.5 1.5V5a1.5 1.5 0 0 1 3 0v6V4a1.5 1.5 0 0 1 3 0v7V5.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-3 5v1z"/>',
+sock:'<path d="M9 3h6v9l3.6 3.6a2.6 2.6 0 0 1-3.7 3.7L9 13.5z"/><path d="M9 7h6"/>',
+shirt:'<path d="M9 4l-5 3 2 4 2.5-1V20h7V10l2.5 1 2-4-5-3a3 3 0 0 1-6 0z"/>',
+beanie:'<circle cx="12" cy="4.5" r="1.6"/><path d="M4.5 16a7.5 7.5 0 0 1 15 0z"/><rect x="3.5" y="16" width="17" height="3.5" rx="1"/>',
+pulse:'<path d="M3 12h4l2-5 4 10 2-5h6"/>',
+flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+left:'<path d="M15 6l-6 6 6 6"/>',
+right:'<path d="M9 6l6 6-6 6"/>',
+temp:'<path d="M10 13.5V5a2 2 0 0 1 4 0v8.5a4 4 0 1 1-4 0z"/><path d="M12 10v6"/>',
+chip:'<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/><path d="M10 10h4M12 10v4"/>',
+gar:'<path d="M9 4l-5 3 2 4 2.5-1V20h7V10l2.5 1 2-4-5-3a3 3 0 0 1-6 0z"/>',
+check:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>'
+};
+function svg(n,cls){return '<svg class="'+(cls||'ico')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICONS[n]||'')+'</svg>'}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function pd(s){var a=s.split('-').map(Number);return new Date(a[0],a[1]-1,a[2])}
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function add(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n)}
+function monday(d){return add(d,-((d.getDay()+6)%7))}
+function same(a,b){return a.getTime()===b.getTime()}
+var MS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var ML=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var DN=['Mon','Tue','Wed','Thu','Fri'];
+function fmt(d){return MS[d.getMonth()]+' '+d.getDate()}
+function person(id){for(var i=0;i<D.people.length;i++)if(D.people[i].id===id)return D.people[i];return {id:id,name:'Unassigned',color:'#888'}}
+function product(id){for(var i=0;i<D.products.length;i++)if(D.products[i].id===id)return D.products[i];return null}
+function task(id){for(var i=0;i<D.tasks.length;i++)if(D.tasks[i].id===id)return D.tasks[i];return null}
+var TODAY=(function(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())})();
+var mode='w',cur=null,curMonth=null,dirty=false,readOnly=false,artifactNS=null,downloadsNS=null,inViewer=!!(window.claude&&window.claude.use);
+
+function range(){var a=null,b=null;D.tasks.forEach(function(t){var s=pd(t.start),e=pd(t.end);if(!a||s<a)a=s;if(!b||e>b)b=e});if(!a){a=TODAY;b=TODAY}return {first:monday(a),last:monday(b)}}
+
+var root=document.getElementById('root');
+root.innerHTML='<div class="wrap">'+
+'<header class="hero"><div><h1 id="h-title"></h1><p id="h-sub"></p></div>'+
+'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="status" class="status" role="status"></span><button id="b-add">Add task</button><button id="b-settings">People and products</button><button id="b-dl" hidden>Download HTML</button><button id="b-save" class="primary">Save changes</button></div></header>'+
+'<div id="banner" class="banner" hidden role="status"><span id="banner-t"></span><span style="display:flex;gap:8px"><button id="bn-discard" type="button">Keep this version</button><button id="bn-use" class="primary" type="button">Use browser changes</button></span></div><section aria-label="Projected totals by delivery"><div id="strip" class="strip"></div></section>'+
+'<div class="bar"><button id="b-prev" aria-label="Previous">'+svg('left')+'</button><button id="b-next" aria-label="Next">'+svg('right')+'</button><button id="b-today">Today</button><span id="v-title" class="title"></span><span class="seg"><button id="b-week" class="on">Week</button><button id="b-month">Month</button></span></div>'+
+'<div id="legend" class="legend"></div><div id="view"></div>'+
+'<p class="note">Drag a task to move it, or drag its left or right edge to change the start or end date. Drop it on another person’s row to reassign it. Right-click a task to copy, duplicate, or delete it, then right-click any day to paste. Shortcuts: point at a task and press Ctrl+C (⌘C on Mac), point at a day and press Ctrl+V, Ctrl+Z to undo. Hold Alt (Option) while dragging to drop a copy. Click a task to edit its text. Weekends are hidden. Fiber counts are added on the draw step.</p><section class="tlsec" aria-labelledby="tl-h"><div class="tlhead"><h2 id="tl-h">Milestone timeline</h2><span class="seg" role="group" aria-label="Show milestones"><button id="tl-all" class="on" type="button">All</button><button id="tl-fiber" type="button">Fiber</button><button id="tl-garment" type="button">Garment</button></span></div><div id="tl-legend" class="legend"></div><div id="tl" class="tl"></div></section><section class="inv" aria-labelledby="inv-h"><h2 id="inv-h">Accomplished Fiber Milestones</h2><div class="scroller"><table id="inv"></table></div><p class="note">Counts go up only when a draw is done. “Have now” counts starting stock plus draws marked done. Each later column adds every draw scheduled on or before that date.</p></section><section class="inv" aria-labelledby="ginv-h"><h2 id="ginv-h">Accomplished Garment Milestones</h2><div class="scroller"><table id="ginv"></table></div><p class="note">Counts come from <span id="ginv-owner"></span>’s integration tasks, using “Garments completed by this task” in each one. A garment counts once its task is marked Done (“Have now”) or once its end date is reached (later columns).</p></section><section class="chipsec bottom" aria-labelledby="chip-h"><h2 id="chip-h">Temperature chips</h2><div id="chipgrid" class="chipgrid"></div></section></div>'+
+'<div id="ctx" class="ctx" hidden role="menu"></div><div id="m-task" class="overlay" hidden><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="mt-h"><h2 id="mt-h">Edit task</h2>'+
+'<div class="f"><label for="f-who">Person in charge</label><select id="f-who"></select></div>'+
+'<div class="f"><label for="f-short">Short label (calendar)</label><input id="f-short" maxlength="60"><div id="e-short" class="err-msg"></div></div>'+
+'<div class="f"><label for="f-text">Full description</label><textarea id="f-text" rows="2"></textarea></div>'+
+'<div class="row2"><div class="f"><label for="f-start">Start date</label><input id="f-start" type="date"></div><div class="f"><label for="f-end">End date</label><input id="f-end" type="date"></div></div><div id="e-date" class="err-msg" style="margin-top:-8px"></div>'+
+'<div class="f"><label for="f-prod">Product icon</label><select id="f-prod"></select></div>'+
+'<div class="f"><label>Fibers drawn by this task (counted once the draw is done)</label><div id="f-outs"></div><button id="b-addout" type="button">Add product count</button></div>'+
+'<div class="f"><label>Garments completed by this task (Lukas’s tasks)</label><div id="f-gouts"></div><button id="b-addgout" type="button">Add garment count</button></div><div class="f"><label for="f-ms">Milestone timeline</label><select id="f-ms"><option value="">Automatic (draws are fiber milestones, Lukas’s tasks are garment milestones)</option><option value="fiber">Fiber milestone</option><option value="none">Hide from the timeline</option></select></div><div class="checks"><label><input id="f-prop" type="checkbox"> Proposed</label><label><input id="f-mile" type="checkbox"> Milestone</label><label><input id="f-done" type="checkbox"> Done</label></div>'+
+'<div class="actions"><span style="display:flex;gap:8px"><button id="b-del" class="ghost danger" type="button">Delete task</button><button id="b-dup" class="ghost" type="button">Duplicate</button><button id="b-copy" class="ghost" type="button">Copy</button></span><div><button id="b-cancel" type="button">Cancel</button><button id="b-apply" class="primary" type="button">Apply</button></div></div></div></div>'+
+'<div id="m-set" class="overlay" hidden><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="ms-h"><h2 id="ms-h">People and products</h2>'+
+'<div class="f"><label for="s-title">Page title</label><input id="s-title"></div>'+
+'<div class="f"><label for="s-sub">Subtitle</label><input id="s-sub"></div>'+
+'<div class="f"><label>People</label><div class="colhead" style="grid-template-columns:1fr 64px"><span>Name</span><span>Color</span></div><div id="s-people"></div></div>'+
+'<div class="f"><label>Garments</label><div class="colhead" style="grid-template-columns:1fr 70px 70px 1.1fr"><span>Name</span><span>Needed</span><span>Already built</span><span></span></div><div id="s-gars"></div></div>'+
+'<div class="f"><label>Products</label><div class="colhead" style="grid-template-columns:1fr 70px 70px 1.1fr"><span>Name</span><span>Needed</span><span>In stock</span><span>Temp chips, comma separated</span></div><div id="s-prods"></div></div>'+
+'<div class="actions"><span></span><div><button id="s-cancel" type="button">Cancel</button><button id="s-apply" class="primary" type="button">Apply</button></div></div></div></div>';
+
+function $(id){return document.getElementById(id)}
+
+function chipStyle(t){var c=person(t.who).color;return t.proposed?'background:'+c+'1c;border:1.5px dashed '+c:'background:'+c+'26;border:1px solid '+c+'80'}
+function chip(t,compact,pos,days){
+var ic=t.milestone?'flag':(t.product&&product(t.product)?product(t.product).icon:'');
+var s=pd(t.start),e=pd(t.end);
+var dates=same(s,e)?fmt(s):fmt(s)+' – '+fmt(e);
+var hl='',hr='';if(days&&!readOnly&&!t.milestone){if(s>=days[0])hl='<span class="h-l" data-h="l" aria-hidden="true"></span>';if(e<=days[4])hr='<span class="h-r" data-h="r" aria-hidden="true"></span>'}
+return '<button class="chip'+(compact?' c':'')+'" data-id="'+esc(t.id)+'" title="'+esc(person(t.who).name+': '+t.text+' ('+dates+')'+(t.done?' – done':''))+'" style="'+chipStyle(t)+';'+(pos||'')+'">'+(t.done?'<span class="done">'+svg('check')+'</span>':'')+(ic?svg(ic):'')+esc(compact?t.short:t.text)+(same(s,e)?'':'<span class="dates">'+dates+'</span>')+hl+hr+'</button>'}
+
+function lanes(mon,compact){
+var days=[0,1,2,3,4].map(function(i){return add(mon,i)}),fri=days[4];
+var h='<div class="lanes" data-week="'+iso(mon)+'"><div class="lrow lhead"><div></div>';
+days.forEach(function(d,i){h+='<div class="dh"><div class="dname">'+DN[i]+'</div><span class="dnum'+(same(d,TODAY)?' today':'')+'">'+d.getDate()+'</span></div>'});
+h+='</div>';
+D.people.forEach(function(p){
+var ts=D.tasks.filter(function(t){return t.who===p.id&&pd(t.start)<=fri&&pd(t.end)>=days[0]});
+if(compact&&!ts.length)return;
+var multi=ts.filter(function(t){return t.start!==t.end}).sort(function(a,b){return a.start<b.start?-1:1});
+var single=ts.filter(function(t){return t.start===t.end});
+var n=multi.length+1;
+h+='<div class="lrow" data-person="'+p.id+'"><div class="who" style="grid-row:1 / span '+n+';grid-column:1"><span class="dot" style="background:'+p.color+'"></span>'+esc(p.name)+'</div>';
+multi.forEach(function(t,i){var s=Math.max(0,Math.round((pd(t.start)-days[0])/864e5)),e=Math.min(4,Math.round((pd(t.end)-days[0])/864e5));if(e<0||s>4)return;h+=chip(t,compact,'grid-row:'+(i+1)+';grid-column:'+(s+2)+' / '+(e+3),days)});
+days.forEach(function(d,i){var ds=single.filter(function(t){return same(pd(t.start),d)});h+='<div class="cell" style="grid-row:'+n+';grid-column:'+(i+2)+'">'+ds.map(function(t){return chip(t,compact,'',days)}).join('')+'</div>'});
+h+='</div>'});
+return h+'</div>'}
+
+function madeIn(mon){var end=add(mon,6),r={};D.tasks.forEach(function(t){var e=pd(t.end);if(e>=mon&&e<=end)(t.out||[]).forEach(function(o){r[o.p]=(r[o.p]||0)+(+o.n||0)})});return r}
+function totalBy(d){var r={};D.products.forEach(function(p){r[p.id]=+p.start||0});D.tasks.forEach(function(t){if(pd(t.end)<=d)(t.out||[]).forEach(function(o){if(r[o.p]!=null)r[o.p]+=(+o.n||0)})});return r}
+
+function chipList(){var r=[];D.products.forEach(function(p){(p.chips||[]).forEach(function(c){if(r.indexOf(c)<0)r.push(c)})});return r}
+function chipCount(per){var r={};chipList().forEach(function(c){r[c]={n:0,by:[]}});D.products.forEach(function(p){var n=per(p);(p.chips||[]).forEach(function(c){r[c].n+=n;if(n)r[c].by.push({p:p,n:n})})});return r}
+function chipsOf(p,qty){if(!p.chips||!p.chips.length)return '';return '<details class="tchips"><summary>'+svg('chip','ico')+p.chips.length+' temp chips per fiber</summary><div class="list">'+p.chips.map(esc).join(', ')+'</div><div class="list" style="font-family:inherit">'+qty*p.chips.length+' chips for '+qty+' fibers</div></details>'}
+function statTile(p,big,sub,ok,extra){return '<div class="stat"><div class="lab">'+svg(p.icon)+esc(p.name)+'</div><div class="num">'+big+'</div><div class="sub'+(ok?' ok':'')+'">'+(ok?svg('check','ico')+' ':'')+sub+'</div>'+(extra||'')+'</div>'}
+function chipCard(name,big,sub,lines){return '<details class="chipcard"><summary><div class="cn">'+svg('temp','ico')+esc(name)+'</div><div class="num">'+big+'</div><div class="sub">'+sub+'</div><span class="more">'+svg('right')+'Breakdown</span></summary><div class="brk">'+lines+'</div></details>'}
+function haveAt(d){var r={};D.products.forEach(function(p){r[p.id]=+p.start||0});D.tasks.forEach(function(t){if(t.done||(d&&pd(t.end)<=d))(t.out||[]).forEach(function(o){if(r[o.p]!=null)r[o.p]+=(+o.n||0)})});return r}
+var INV_COLS=[['Have Oct 30','2026-10-30'],['Have Nov 15','2026-11-15'],['Have Dec 1','2026-12-01'],['Have Dec 15','2026-12-15']];
+function invCell(v,need){var dif=v-need,tag=dif>0?'<span class="tag met">'+dif+' extra</span>':dif===0?'<span class="tag met">complete</span>':'<span class="tag short">'+(-dif)+' short</span>';return '<td class="n"><span class="q">'+v+'</span>'+tag+'</td>'}
+function gHaveAt(dt){var r={};(D.garments||[]).forEach(function(g){r[g.id]=+g.start||0});D.tasks.forEach(function(t){if(t.who===GARMENT_OWNER&&(t.done||(dt&&pd(t.end)<=dt)))(t.gout||[]).forEach(function(o){if(r[o.g]!=null)r[o.g]+=(+o.n||0)})});return r}
+function renderGInv(){var G=D.garments||[],now=gHaveAt(null),cols=INV_COLS.map(function(c){return gHaveAt(pd(c[1]))});
+var h='<thead><tr><th>Garment</th><th>Needed (with spares)</th><th>Have now ('+fmt(TODAY)+')</th>'+INV_COLS.map(function(c){return '<th>'+c[0]+'</th>'}).join('')+'</tr></thead><tbody>';
+G.forEach(function(g){h+='<tr><td><span class="comp">'+svg(g.icon)+esc(g.name)+'</span></td><td class="n"><span class="q">'+g.need+'</span></td>'+invCell(now[g.id],g.need)+cols.map(function(c){return invCell(c[g.id],g.need)}).join('')+'</tr>'});
+$('ginv').innerHTML=h+'</tbody>';$('ginv-owner').textContent=person(GARMENT_OWNER).name}
+function renderInv(){
+var now=haveAt(null),cols=INV_COLS.map(function(c){return haveAt(pd(c[1]))});
+var h='<thead><tr><th>Component</th><th>Needed (with spares)</th><th>Have now ('+fmt(TODAY)+')</th>'+INV_COLS.map(function(c){return '<th>'+c[0]+'</th>'}).join('')+'</tr></thead><tbody>';
+D.products.forEach(function(p,i){h+='<tr><td><span class="comp">'+svg(p.icon)+esc(p.name)+'</span></td><td class="n"><span class="q">'+p.need+'</span></td>'+invCell(now[p.id],p.need)+cols.map(function(c){return invCell(c[p.id],p.need)}).join('')+'</tr>'});
+$('inv').innerHTML=h+'</tbody>'}
+var tlFilter='all';
+var GARMENT_OWNER='K';
+function msType(t){if(t.ms==='none')return '';if(t.who===GARMENT_OWNER)return 'garment';if(t.ms==='fiber'||(t.out&&t.out.length))return 'fiber';return ''}
+function garment(id){var g=D.garments||[];for(var i=0;i<g.length;i++)if(g[i].id===id)return g[i];return null}
+function msLabel(t){if(msType(t)==='garment'&&t.gout&&t.gout.length)return t.gout.map(function(o){var g=garment(o.g);return (g?g.name.replace(/ \(pairs\)/,''):o.g)+' ×'+o.n+(g&&/pairs/.test(g.name)?' pairs':'')}).join(', ')+' integrated';if(msType(t)==='fiber'&&t.out&&t.out.length)return t.out.map(function(o){var p=product(o.p);return (p?p.name:o.p)+' ×'+o.n}).join(', ')+' drawn';return t.short||t.text}
+function renderTL(){
+var box=$('tl');if(!box)return;
+var ms=D.tasks.filter(function(t){var k=msType(t);return k&&(tlFilter==='all'||tlFilter===k)}).sort(function(a,b){return a.end<b.end?-1:a.end>b.end?1:(msType(a)<msType(b)?-1:1)});
+$('tl-legend').innerHTML='<span><span style="width:12px;height:12px;border:2px solid var(--ink-3);border-radius:50%;display:inline-block"></span>Fiber milestone</span><span><span style="width:10px;height:10px;border:2px solid var(--ink-3);border-radius:2px;transform:rotate(45deg);display:inline-block;margin:0 2px"></span>Garment milestone ('+esc(person(GARMENT_OWNER).name)+')</span><span><span style="width:12px;height:12px;border-radius:50%;background:var(--ink-3);display:inline-block"></span>Done</span><span><span style="width:12px;height:12px;border:2px dashed var(--ink-3);border-radius:50%;display:inline-block"></span>Proposed</span><span style="color:var(--ink-3)">Node color shows who it’s assigned to. Click one to edit.</span>';
+if(!ms.length){box.style.height='';box.innerHTML='<p class="note" style="padding:16px;margin:0">No milestones yet. Set “Milestone timeline” in a task to add one.</p>';return}
+var W=box.clientWidth||960,cols=W<520?2:W<760?3:W<1000?4:5,rowH=180,R=rowH/2,top=44;
+var rows=Math.ceil(ms.length/cols),H=top+(rows-1)*rowH+130;
+var RX=Math.min(R,Math.max(26,W*0.07)),inner=W-2*RX,xs=function(i){return RX+inner*(i+0.5)/cols};
+var pts=ms.map(function(t,i){var r=Math.floor(i/cols),c=i%cols;if(r%2)c=cols-1-c;return {x:xs(c),y:top+r*rowH,t:t}});
+var path='M '+Math.max(8,RX-30)+' '+top;
+for(var r=0;r<rows;r++){var y=top+r*rowH,ltr=r%2===0,last=r===rows-1;
+var nInRow=Math.min(cols,ms.length-r*cols),endX=last?(ltr?xs(nInRow-1):xs(cols-nInRow)):(ltr?W-RX:RX);
+path+=' L '+endX+' '+y;
+if(!last)path+=' A '+RX+' '+R+' 0 0 '+(ltr?1:0)+' '+endX+' '+(y+rowH)}
+var h='<svg width="'+W+'" height="'+H+'" aria-hidden="true"><path d="'+path+'" fill="none" stroke="var(--line-2)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var first=ms[0],lastP=pts[pts.length-1];
+h+='<span class="tlend tlstart" style="left:8px;top:'+top+'px">Start</span>';
+var cw=Math.min(170,inner/cols-8);
+pts.forEach(function(p){var t=p.t,k=msType(t),c=person(t.who).color,ic=k==='garment'?(t.product&&product(t.product)?product(t.product).icon:'gar'):(t.out&&t.out[0]&&product(t.out[0].p)?product(t.out[0].p).icon:'flag');
+if(t.milestone)ic='flag';
+if(k==='garment'&&t.gout&&t.gout[0]&&garment(t.gout[0].g))ic=garment(t.gout[0].g).icon;
+var e=pd(t.end),s0=pd(t.start),dt=same(s0,e)?fmt(e):'by '+fmt(e);
+h+='<button type="button" class="tln '+k+(t.proposed?' prop':'')+(t.done?' done':'')+'" data-id="'+esc(t.id)+'" style="left:'+p.x+'px;top:'+(p.y-15)+'px;width:'+cw+'px" title="'+esc(person(t.who).name+': '+msLabel(t)+' ('+dt+')')+'">'+
+'<span class="nd" style="border-color:'+c+';color:'+(t.done?'#fff':c)+';'+(t.done?'background:'+c:'')+'">'+svg(t.done?'check':ic)+'</span>'+
+'<span class="cd"><span class="dt">'+dt+'</span><span class="tt">'+esc(msLabel(t))+'</span><span class="wh"><span class="dot" style="background:'+c+'"></span>'+esc(person(t.who).name)+'</span></span></button>'});
+var del=null;D.tasks.forEach(function(t){if(t.milestone&&/deliver/i.test(t.short)&&(!del||t.end>del.end))del=t});
+if(del){var lr=Math.floor((pts.length-1)/cols)%2===0,ex=lr?Math.min(W-50,lastP.x+cw/2+40):Math.max(50,lastP.x-cw/2-40);h=h.replace('</svg>','<path d="M '+lastP.x+' '+lastP.y+' L '+ex+' '+lastP.y+'" stroke="var(--line-2)" stroke-width="6" stroke-dasharray="2 10" stroke-linecap="round"/></svg>');h+='<span class="tlend" style="left:'+ex+'px;top:'+lastP.y+'px">'+esc(del.short)+' '+fmt(pd(del.end))+'</span>'}
+box.style.height=H+'px';box.innerHTML=h}
+function renderChips(){
+var wk=cur||monday(TODAY),need=chipCount(function(p){return +p.need||0}),tot=totalBy(add(wk,6));
+var names=chipList();
+if(!names.length){$('chip-h').textContent='Temperature chips';$('chipgrid').innerHTML='<p class="note">No chips listed. Add them under People and products.</p>';return}
+var all=0;names.forEach(function(c){all+=need[c].n});
+$('chip-h').textContent='Temperature chips: '+all+' needed in total';
+$('chipgrid').innerHTML=names.map(function(c){var n=need[c].n,h=0;
+var lines=need[c].by.map(function(b){var hb=Math.min(tot[b.p.id]||0,+b.p.need||0);h+=hb;return '<div><span>'+esc(b.p.name)+'</span><span>'+hb+' / '+b.n+'</span></div>'}).join('');
+return chipCard(c,n,h+' built into fibers by '+fmt(add(wk,4))+', '+Math.max(0,n-h)+' to go',lines+'<div style="color:var(--ink-3);margin-top:4px">Built / needed, one per fiber</div>')}).join('')}
+
+function renderStrip(){var r=range(),tot=totalBy(add(r.last,6));$('strip').innerHTML=D.products.map(function(p){var t=tot[p.id],ok=t>=p.need;return statTile(p,t+' <span style="font-size:13px;font-weight:400;color:var(--ink-3)">/ '+p.need+'</span>','projected by '+fmt(add(r.last,4)),ok,chipsOf(p,+p.need||0))}).join('')}
+
+function renderWeek(){
+var r=range();if(cur<r.first)cur=r.first;if(cur>r.last)cur=r.last;
+$('v-title').textContent=fmt(cur)+' – '+fmt(add(cur,4))+', '+add(cur,4).getFullYear();
+var m=madeIn(cur),tot=totalBy(add(cur,6));
+var made='<div class="made"><h3>Drawn by end of week, Fri '+fmt(add(cur,4))+'</h3><div class="grid">'+D.products.map(function(p){var n=m[p.id]||0,t=tot[p.id];return statTile(p,(n?'+'+n:'<span style="color:var(--ink-3)">0</span>'),t+' / '+p.need+' total',t>=p.need)}).join('')+'</div>';
+var wc=chipCount(function(p){return m[p.id]||0}),wn=chipList().filter(function(c){return wc[c].n});
+made+='<h3 style="margin-top:16px">Temperature chips used this week</h3>'+(wn.length?'<div class="chipgrid">'+wn.map(function(c){return chipCard(c,'+'+wc[c].n,'in fibers drawn this week',wc[c].by.map(function(b){return '<div><span>'+esc(b.p.name)+'</span><span>+'+b.n+'</span></div>'}).join(''))}).join('')+'</div>':'<p class="note" style="margin-top:0">No T fibers drawn this week.</p>')+'</div>';
+$('view').innerHTML='<div class="scroller">'+lanes(cur,false)+'</div>'+made}
+
+function renderMonth(){
+var y=curMonth.y,mo=curMonth.m,r=range();
+$('v-title').textContent=ML[mo]+' '+y;
+var first=new Date(y,mo,1),last=new Date(y,mo+1,0),d=monday(first),h='';
+while(d<=last){if(d>=r.first&&d<=r.last){var m=madeIn(d),mk=Object.keys(m);
+h+='<div class="wkb scroller"><div class="wkh" data-week="'+iso(d)+'" tabindex="0" role="button"><span style="font-weight:600">'+fmt(d)+' – '+fmt(add(d,4))+'</span><span>Drawn: '+(mk.length?mk.map(function(k){var p=product(k);return '<span class="mini">'+(p?svg(p.icon):'')+'+'+m[k]+'</span>'}).join(''):'<span style="color:var(--ink-3)">nothing finished</span>')+'</span></div>'+lanes(d,true)+'</div>'}
+d=add(d,7)}
+$('view').innerHTML=h||'<p class="note">No tasks this month.</p>'}
+
+function render(){
+$('h-title').textContent=D.title;$('h-sub').textContent=D.subtitle;document.title=D.title;
+$('legend').innerHTML=D.people.map(function(p){return '<span><span class="dot" style="background:'+p.color+'"></span>'+esc(p.name)+'</span>'}).join('')+'<span><span style="width:16px;height:10px;border:1.5px dashed var(--ink-3);border-radius:2px;display:inline-block"></span>Proposed</span>';
+renderStrip();
+$('b-week').classList.toggle('on',mode==='w');$('b-month').classList.toggle('on',mode==='m');
+if(mode==='w')renderWeek();else renderMonth();
+renderTL();
+renderChips();
+renderInv();
+renderGInv();
+setStatus();
+if(typeof clip!=='undefined'&&clip){var ce=document.querySelector('.chip[data-id="'+clip.id+'"]');if(ce)ce.classList.add('copied')}
+}
+
+function setStatus(msg,cls){var s=$('status');if(msg){s.textContent=msg;s.className='status'+(cls?' '+cls:'');return}
+if(readOnly){s.textContent='View only';s.className='status'}else if(dirty){s.textContent='Unsaved changes';s.className='status dirty'}else if(localOnly){s.textContent='Saves to this browser only';s.className='status'}else{s.textContent='';s.className='status'}}
+var hist=[];
+function snap(){hist.push(JSON.stringify(D));if(hist.length>40)hist.shift()}
+function undo(){if(!hist.length){setStatus('Nothing to undo');return}D=JSON.parse(hist.pop());dirty=true;render();setStatus('Undone. Unsaved changes','dirty')}
+function markDirty(){dirty=true;render()}
+
+function init(){var r=range();var w=monday(TODAY);cur=(w>=r.first&&w<=r.last)?w:r.first;curMonth={y:add(cur,4).getFullYear(),m:add(cur,4).getMonth()}}
+
+$('b-week').onclick=function(){mode='w';render()};
+$('b-month').onclick=function(){var f=add(cur,4);curMonth={y:f.getFullYear(),m:f.getMonth()};mode='m';render()};
+$('b-prev').onclick=function(){if(mode==='w'){cur=add(cur,-7)}else{var r=range(),p=new Date(curMonth.y,curMonth.m-1,1);if(new Date(p.getFullYear(),p.getMonth()+1,0)>=r.first)curMonth={y:p.getFullYear(),m:p.getMonth()}}render()};
+$('b-next').onclick=function(){if(mode==='w'){cur=add(cur,7)}else{var r=range(),n=new Date(curMonth.y,curMonth.m+1,1);if(n<=add(r.last,4))curMonth={y:n.getFullYear(),m:n.getMonth()}}render()};
+$('b-today').onclick=function(){init();render()};
+$('view').addEventListener('click',function(ev){if(suppress){suppress=false;return}var c=ev.target.closest('[data-id]');if(c){openTask(c.getAttribute('data-id'));return}var w=ev.target.closest('[data-week]');if(w){cur=pd(w.getAttribute('data-week'));mode='w';render()}});
+$('view').addEventListener('keydown',function(ev){if(ev.key==='Enter'){var w=ev.target.closest('[data-week]');if(w){cur=pd(w.getAttribute('data-week'));mode='w';render()}}});
+
+var editing=null,lastFocus=null;
+function prodOptions(sel,withNone){return (withNone?'<option value="">None</option>':'')+D.products.map(function(p){return '<option value="'+p.id+'"'+(p.id===sel?' selected':'')+'>'+esc(p.name)+'</option>'}).join('')}
+function goutRow(o){return '<div class="outrow"><select aria-label="Garment">'+(D.garments||[]).map(function(g){return '<option value="'+g.id+'"'+(g.id===o.g?' selected':'')+'>'+esc(g.name)+'</option>'}).join('')+'</select><input type="number" min="0" step="1" aria-label="Count" value="'+(+o.n||0)+'"><button type="button" class="ghost" aria-label="Remove">×</button></div>'}
+function outRow(o){return '<div class="outrow"><select aria-label="Product">'+prodOptions(o.p,false)+'</select><input type="number" min="0" step="1" aria-label="Count" value="'+(+o.n||0)+'"><button type="button" class="ghost" aria-label="Remove">×</button></div>'}
+function openTask(id){
+lastFocus=document.activeElement;
+var t=id?task(id):null;editing=t?t.id:null;
+var d=t||{who:D.people[0].id,short:'',text:'',start:iso(cur),end:iso(cur),product:'',out:[]};
+$('mt-h').textContent=t?'Edit task':'Add task';
+$('f-who').innerHTML=D.people.map(function(p){return '<option value="'+p.id+'"'+(p.id===d.who?' selected':'')+'>'+esc(p.name)+'</option>'}).join('');
+$('f-short').value=d.short;$('f-text').value=d.text;$('f-start').value=d.start;$('f-end').value=d.end;
+$('f-prod').innerHTML=prodOptions(d.product,true);
+$('f-outs').innerHTML=(d.out||[]).map(outRow).join('');$('f-gouts').innerHTML=(d.gout||[]).map(goutRow).join('');
+$('f-prop').checked=!!d.proposed;$('f-mile').checked=!!d.milestone;$('f-done').checked=!!d.done;$('f-ms').value=d.ms||'';
+$('e-short').textContent='';$('e-date').textContent='';
+$('b-del').hidden=!t;$('b-dup').hidden=!t;$('b-copy').hidden=!t;
+$('m-task').hidden=false;$('f-short').focus();
+}
+function closeTask(){$('m-task').hidden=true;editing=null;if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+$('b-add').onclick=function(){openTask(null)};
+$('b-addgout').onclick=function(){if((D.garments||[]).length)$('f-gouts').insertAdjacentHTML('beforeend',goutRow({g:D.garments[0].id,n:0}))};
+$('f-gouts').addEventListener('click',function(ev){if(ev.target.closest('button')){ev.target.closest('.outrow').remove()}});
+$('b-addout').onclick=function(){$('f-outs').insertAdjacentHTML('beforeend',outRow({p:D.products[0].id,n:0}))};
+$('f-outs').addEventListener('click',function(ev){if(ev.target.closest('button')){ev.target.closest('.outrow').remove()}});
+$('f-short').oninput=function(){$('e-short').textContent=''};
+$('f-start').oninput=$('f-end').oninput=function(){$('e-date').textContent=''};
+$('b-cancel').onclick=closeTask;
+$('b-del').onclick=function(){if(!editing)return;if(!confirm('Delete this task?'))return;snap();D.tasks=D.tasks.filter(function(t){return t.id!==editing});closeTask();markDirty()};
+$('b-apply').onclick=function(){
+var short=$('f-short').value.trim(),s=$('f-start').value,e=$('f-end').value,ok=true;
+if(!short){$('e-short').textContent='Enter a short label';ok=false}
+if(!s||!e){$('e-date').textContent='Enter both dates';ok=false}else if(e<s){$('e-date').textContent='End date must be on or after the start date';ok=false}
+if(!ok)return;
+snap();
+var outs=[].map.call($('f-outs').querySelectorAll('.outrow'),function(r){return {p:r.querySelector('select').value,n:Math.max(0,Math.round(+r.querySelector('input').value||0))}}).filter(function(o){return o.n>0});
+var obj={who:$('f-who').value,short:short,text:$('f-text').value.trim()||short,start:s,end:e,product:$('f-prod').value,out:outs};
+if($('f-prop').checked)obj.proposed=true;if($('f-mile').checked)obj.milestone=true;if($('f-done').checked)obj.done=true;if($('f-ms').value)obj.ms=$('f-ms').value;var gouts=[].map.call($('f-gouts').querySelectorAll('.outrow'),function(r){return {g:r.querySelector('select').value,n:Math.max(0,Math.round(+r.querySelector('input').value||0))}}).filter(function(o){return o.n>0});if(gouts.length)obj.gout=gouts;
+if(editing){var t=task(editing);Object.keys(t).forEach(function(k){if(k!=='id')delete t[k]});Object.assign(t,obj)}
+else{var n=1;while(task('t'+n))n++;obj.id='t'+n;D.tasks.push(obj)}
+closeTask();cur=monday(pd(s));if(mode==='m')curMonth={y:pd(s).getFullYear(),m:pd(s).getMonth()};markDirty()};
+
+function openSet(){
+lastFocus=document.activeElement;
+$('s-title').value=D.title;$('s-sub').value=D.subtitle;
+$('s-people').innerHTML=D.people.map(function(p){return '<div class="prow" data-pid="'+p.id+'"><input aria-label="Name" value="'+esc(p.name)+'"><input type="color" aria-label="Color" value="'+p.color+'"></div>'}).join('');
+$('s-gars').innerHTML=(D.garments||[]).map(function(g){return '<div class="prodrow" data-gid="'+g.id+'"><input aria-label="Garment name" value="'+esc(g.name)+'"><input type="number" min="0" step="1" aria-label="Needed" value="'+g.need+'"><input type="number" min="0" step="1" aria-label="Already built" value="'+g.start+'"><span></span></div>'}).join('');
+$('s-prods').innerHTML=D.products.map(function(p){return '<div class="prodrow" data-pid="'+p.id+'"><input aria-label="Product name" value="'+esc(p.name)+'"><input type="number" min="0" step="1" aria-label="Needed" value="'+p.need+'"><input type="number" min="0" step="1" aria-label="In stock at start" value="'+p.start+'"><input aria-label="Temperature chips" value="'+esc((p.chips||[]).join(', '))+'"></div>'}).join('');
+$('m-set').hidden=false;$('s-title').focus()}
+function closeSet(){$('m-set').hidden=true;if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+$('b-settings').onclick=openSet;$('s-cancel').onclick=closeSet;
+$('s-apply').onclick=function(){
+snap();
+D.title=$('s-title').value.trim()||D.title;D.subtitle=$('s-sub').value.trim();
+[].forEach.call($('s-people').querySelectorAll('.prow'),function(r){var p=person(r.getAttribute('data-pid'));var ins=r.querySelectorAll('input');p.name=ins[0].value.trim()||p.name;p.color=ins[1].value});
+[].forEach.call($('s-gars').querySelectorAll('.prodrow'),function(r){var g=garment(r.getAttribute('data-gid'));var ins=r.querySelectorAll('input');g.name=ins[0].value.trim()||g.name;g.need=Math.max(0,Math.round(+ins[1].value||0));g.start=Math.max(0,Math.round(+ins[2].value||0))});
+[].forEach.call($('s-prods').querySelectorAll('.prodrow'),function(r){var p=product(r.getAttribute('data-pid'));var ins=r.querySelectorAll('input');p.name=ins[0].value.trim()||p.name;p.need=Math.max(0,Math.round(+ins[1].value||0));p.start=Math.max(0,Math.round(+ins[2].value||0));p.chips=ins[3].value.split(',').map(function(x){return x.trim()}).filter(Boolean)});
+closeSet();markDirty()};
+document.addEventListener('keydown',function(ev){if(ev.key==='Escape'){if(!$('m-task').hidden)closeTask();else if(!$('m-set').hidden)closeSet()}});
+[$('m-task'),$('m-set')].forEach(function(o){o.addEventListener('click',function(ev){if(ev.target===o){o===$('m-task')?closeTask():closeSet()}})});
+
+function buildHTML(){
+var css=document.getElementById('css').textContent;
+var app=document.getElementById('app').textContent;
+var json=JSON.stringify(D).replace(/</g,'\\u003c');
+return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<title>'+esc(D.title)+'</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">\n<style id="css">'+css+'</style>\n</head>\n<body>\n<div id="root"></div>\n<script id="data" type="application/json">'+json+'<\/script>\n<script id="app">'+app+'<\/script>\n</body>\n</html>\n'}
+
+var saving=false,artifactReady=null,localOnly=!inViewer;
+$('b-save').onclick=function(){
+if(artifactReady&&!artifactNS&&!readOnly){setStatus('Connecting…');artifactReady.then(function(){$('b-save').onclick()});return}
+if(saving)return;
+if(!dirty){setStatus('No changes to save');setTimeout(function(){setStatus()},1800);return}
+if(artifactNS&&!readOnly){
+saving=true;setStatus('Saving…');
+artifactNS.publish(buildHTML()).then(function(){dirty=false;saving=false;try{localStorage.removeItem(LSKEY)}catch(e){}setStatus('Saved')}).catch(function(err){saving=false;var c=err&&err.code;
+if(c==='conflict'){setStatus('A newer version was saved elsewhere. Reloading it.')}
+else if(c==='not_writer'||c==='not_granted'||c==='consent_required'||c==='capability_disabled'||c==='capability_removed'||c==='not_declared'){readOnly=true;saveLocal();setStatus('You can view this page but not save it here. Changes kept in this browser only.')}
+else if(c==='rate_limited'){setStatus('Saving too often. Wait a moment, then save again.','err')}
+else if(c==='too_large'){setStatus('The schedule is too large to save. Remove some tasks and try again.','err')}
+else{setStatus('Couldn’t save. Try again.','err')}})}
+else{saveLocal();setStatus('Saved in this browser only. Open this page inside Claude to save it for everyone.','dirty')}};
+function saveLocal(){try{localStorage.setItem(LSKEY,JSON.stringify({v:2,base:EMBED_H,data:D}));dirty=false}catch(e){setStatus('Couldn’t save in this browser.','err')}}
+
+$('b-dl').onclick=function(){var html=buildHTML(),name='arctic-schedule.html';
+if(downloadsNS){downloadsNS.save({filename:name,data:html}).catch(function(err){if(err&&err.code!=='cancelled'&&err.code!=='declined')setStatus('Couldn’t download the file.','err')});return}
+var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)};
+
+window.addEventListener('beforeunload',function(ev){if(dirty){ev.preventDefault();ev.returnValue=''}});
+
+var EMBED_H=(function(t){var h=5381;for(var i=0;i<t.length;i++)h=((h*33)^t.charCodeAt(i))>>>0;return h.toString(36)})(document.getElementById('data').textContent);
+function readLocal(){try{var s=localStorage.getItem(LSKEY);if(!s)return null;var x=JSON.parse(s);if(x&&x.v===2&&x.data&&x.data.tasks)return {data:x.data,base:x.base};if(x&&x.tasks&&x.people&&x.products)return {data:x,base:null}}catch(e){}return null}
+function sig(o){return JSON.stringify([o.title,o.subtitle,o.people,o.tasks,o.products.map(function(p){return [p.id,p.name,p.need,p.start,p.chips||null]})])}
+function fillChips(x){if(!x.garments)x.garments=JSON.parse(JSON.stringify(D.garments||[]));var def={};D.products.forEach(function(p){def[p.id]=p.chips});x.products.forEach(function(p){if(!p.chips)p.chips=def[p.id]||[]});return x}
+function showBanner(x,text){$('banner-t').textContent=text;$('banner').hidden=false;
+$('bn-use').onclick=function(){D=fillChips(x);$('banner').hidden=true;init();dirty=true;render();$('b-save').onclick()};
+$('bn-discard').onclick=function(){try{localStorage.removeItem(LSKEY)}catch(e){}$('banner').hidden=true;setStatus()}}
+function loadLocal(){var r=readLocal();if(!r||sig(fillChips(r.data))===sig(D))return;
+if(r.base===EMBED_H){D=fillChips(r.data);init();render();return}
+showBanner(r.data,'This browser has different changes saved from another copy of this page. The page is showing this file’s version. Use the browser’s changes instead?')}
+
+var REF=new Date(2020,0,6);
+function bizIndex(d){var days=Math.round((d-REF)/864e5),w=Math.floor(days/7),r=days-w*7;return w*5+Math.min(r,4)}
+function fromBiz(i){var w=Math.floor(i/5),r=i-w*5;return add(REF,w*7+r)}
+function addBiz(d,n){return fromBiz(bizIndex(d)+n)}
+var drag=null,suppress=false;
+function heads(L){return L.querySelectorAll('.lhead .dh')}
+function dateAt(L,x){var mon=pd(L.getAttribute('data-week')),hs=heads(L);for(var i=0;i<hs.length;i++){if(x<hs[i].getBoundingClientRect().right)return add(mon,i)}return add(mon,4)}
+function rowAt(L,y){var rs=L.querySelectorAll('.lrow[data-person]');for(var i=0;i<rs.length;i++){var r=rs[i].getBoundingClientRect();if(y>=r.top&&y<r.bottom)return rs[i]}return null}
+function clearPreview(){var p=document.querySelector('.preview');if(p)p.remove()}
+function showPreview(L,ns,ne,who){
+clearPreview();
+var mon=pd(L.getAttribute('data-week')),b0=bizIndex(mon),s=bizIndex(ns)-b0,e=bizIndex(ne)-b0;
+if(e<0||s>4)return;s=Math.max(0,s);e=Math.min(4,e);
+var row=L.querySelector('.lrow[data-person="'+who+'"]');if(!row)return;
+var hs=heads(L),lr=L.getBoundingClientRect(),rr=row.getBoundingClientRect(),a=hs[s].getBoundingClientRect(),z=hs[e].getBoundingClientRect();
+var p=document.createElement('div');p.className='preview';
+p.style.left=(a.left-lr.left+2)+'px';p.style.width=(z.right-a.left-4)+'px';p.style.top=(rr.top-lr.top+2)+'px';p.style.height=(rr.height-4)+'px';
+p.textContent=(drag.copy?'Copy: ':'')+(same(ns,ne)?fmt(ns):fmt(ns)+' – '+fmt(ne))+(who!==drag.t.who?', '+person(who).name:'');
+L.appendChild(p)}
+$('view').addEventListener('pointerdown',function(ev){
+if(readOnly||ev.button!==0)return;
+var c=ev.target.closest('.chip');if(!c)return;
+var t=task(c.getAttribute('data-id')),L=c.closest('.lanes');if(!t||!L)return;
+var h=ev.target.closest('[data-h]');
+drag={t:t,el:c,kind:h?h.getAttribute('data-h'):'move',x0:ev.clientX,y0:ev.clientY,grab:dateAt(L,ev.clientX),started:false,L:L,ns:pd(t.start),ne:pd(t.end),who:t.who};
+document.addEventListener('pointermove',onMove);document.addEventListener('pointerup',onUp);document.addEventListener('pointercancel',onCancel);
+});
+function onMove(ev){
+if(!drag)return;
+if(!drag.started){if(Math.abs(ev.clientX-drag.x0)+Math.abs(ev.clientY-drag.y0)<5)return;drag.started=true;drag.el.classList.add('dragging');document.body.classList.add(drag.kind==='move'?'is-dragging':'is-resizing')}
+ev.preventDefault();
+var under=document.elementFromPoint(ev.clientX,ev.clientY),L=(under&&under.closest('.lanes'))||drag.L;
+if(drag.kind!=='move')L=drag.L;
+var d=dateAt(L,ev.clientX),t=drag.t,s0=pd(t.start),e0=pd(t.end);
+if(drag.kind==='move'){var k=bizIndex(d)-bizIndex(drag.grab);drag.ns=addBiz(s0,k);drag.ne=addBiz(e0,k);var r=rowAt(L,ev.clientY);drag.who=r?r.getAttribute('data-person'):drag.who}
+else if(drag.kind==='l'){drag.ns=d<=e0?d:e0;drag.ne=e0}
+else{drag.ne=d>=s0?d:s0;drag.ns=s0}
+drag.copy=drag.kind==='move'&&ev.altKey;drag.L=L;showPreview(L,drag.ns,drag.ne,drag.who)}
+function endDrag(){document.removeEventListener('pointermove',onMove);document.removeEventListener('pointerup',onUp);document.removeEventListener('pointercancel',onCancel);document.body.classList.remove('is-dragging','is-resizing');clearPreview();if(drag&&drag.el)drag.el.classList.remove('dragging')}
+function onUp(ev){
+if(!drag)return;var d=drag;endDrag();drag=null;
+if(!d.started)return;
+suppress=true;setTimeout(function(){suppress=false},0);
+var t=d.t,ns=iso(d.ns),ne=iso(d.ne);
+if(d.kind==='move'&&ev&&ev.altKey){snap();var c=cloneTask(t);c.start=ns;c.end=ne;c.who=d.who;D.tasks.push(c);markDirty();setStatus('Copied to '+fmt(d.ns)+', '+person(d.who).name+'. Unsaved changes','dirty');return}
+if(ns===t.start&&ne===t.end&&d.who===t.who)return;
+snap();
+var moved=d.who!==t.who;
+t.start=ns;t.end=ne;t.who=d.who;
+markDirty();
+setStatus((moved?'Moved to '+person(d.who).name+'. ':'')+'Unsaved changes','dirty')}
+function onCancel(){endDrag();drag=null}
+var clip=null,hover={x:null,y:null,chip:null};
+function newId(){var n=1;while(task('t'+n))n++;return 't'+n}
+function cloneTask(t){var c=JSON.parse(JSON.stringify(t));c.id=newId();delete c.done;return c}
+function copyTask(id){var t=task(id);if(!t)return;clip=JSON.parse(JSON.stringify(t));[].forEach.call(document.querySelectorAll('.chip.copied'),function(e){e.classList.remove('copied')});var el=document.querySelector('.chip[data-id="'+id+'"]');if(el)el.classList.add('copied');setStatus('Copied “'+t.short+'”. Point at a day and press '+(isMac?'⌘':'Ctrl')+'+V, or right-click a day.')}
+function pasteAt(date,who){if(!clip){setStatus('Copy a task first');return}if(readOnly)return;
+var dur=bizIndex(pd(clip.end))-bizIndex(pd(clip.start));
+snap();var c=cloneTask(clip);c.start=iso(date);c.end=iso(addBiz(date,Math.max(0,dur)));c.who=who||clip.who;D.tasks.push(c);markDirty();
+setStatus('Pasted “'+c.short+'” on '+fmt(date)+', '+person(c.who).name+'. Unsaved changes','dirty')}
+function duplicateTask(id){var t=task(id);if(!t||readOnly)return;snap();var c=cloneTask(t);D.tasks.push(c);markDirty();setStatus('Duplicated “'+t.short+'” on the same dates. Drag it where you need it.','dirty')}
+function deleteTask(id){var t=task(id);if(!t||readOnly)return;snap();D.tasks=D.tasks.filter(function(x){return x.id!==id});markDirty();setStatus('Deleted “'+t.short+'”. Press '+(isMac?'⌘':'Ctrl')+'+Z to undo.','dirty')}
+function targetAt(x,y){if(x==null)return null;var el=document.elementFromPoint(x,y),L=el&&el.closest('.lanes');if(!L||!el.closest('.lrow[data-person]'))return null;var r=rowAt(L,y);return r?{date:dateAt(L,x),who:r.getAttribute('data-person')}:null}
+var isMac=/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent);
+$('view').addEventListener('pointermove',function(ev){hover.x=ev.clientX;hover.y=ev.clientY;var c=ev.target.closest('.chip');hover.chip=c?c.getAttribute('data-id'):null});
+$('view').addEventListener('pointerleave',function(){hover.x=hover.y=null;hover.chip=null});
+var ctx=$('ctx');
+function closeCtx(){ctx.hidden=true}
+function openCtx(x,y,items){ctx.innerHTML=items.map(function(it,i){return it==='-'?'<hr>':it.muted?'<div class="muted">'+esc(it.label)+'</div>':'<button type="button" role="menuitem" data-i="'+i+'"><span>'+esc(it.label)+'</span>'+(it.key?'<kbd>'+it.key+'</kbd>':'')+'</button>'}).join('');
+ctx.hidden=false;var w=ctx.offsetWidth,h=ctx.offsetHeight;ctx.style.left=Math.min(x,window.innerWidth-w-8)+'px';ctx.style.top=Math.min(y,window.innerHeight-h-8)+'px';
+[].forEach.call(ctx.querySelectorAll('button'),function(b){b.onclick=function(){var it=items[+b.getAttribute('data-i')];closeCtx();it.run()}});var f=ctx.querySelector('button');if(f)f.focus()}
+var M=function(k){return (isMac?'⌘':'Ctrl+')+k};
+$('view').addEventListener('contextmenu',function(ev){
+var c=ev.target.closest('.chip'),tg=targetAt(ev.clientX,ev.clientY);
+if(!c&&!tg)return;ev.preventDefault();
+var items=[];
+if(c){var id=c.getAttribute('data-id');items.push({label:'Copy',key:M('C'),run:function(){copyTask(id)}});if(!readOnly){items.push({label:'Duplicate',run:function(){duplicateTask(id)}});items.push({label:'Edit…',run:function(){openTask(id)}})}}
+if(tg&&!readOnly&&(clip||!c)){if(items.length)items.push('-');items.push(clip?{label:'Paste here ('+fmt(tg.date)+', '+person(tg.who).name+')',key:M('V'),run:function(){pasteAt(tg.date,tg.who)}}:{muted:true,label:'Copy a task to paste here'})}
+if(c&&!readOnly){items.push('-');items.push({label:'Delete',run:function(){deleteTask(c.getAttribute('data-id'))}})}
+openCtx(ev.clientX,ev.clientY,items)});
+document.addEventListener('pointerdown',function(ev){if(!ctx.hidden&&!ev.target.closest('#ctx'))closeCtx()});
+window.addEventListener('scroll',closeCtx,true);
+document.addEventListener('keydown',function(ev){
+if(ev.key==='Escape'&&!ctx.hidden){closeCtx();return}
+if(!$('m-task').hidden||!$('m-set').hidden)return;
+var tgt=ev.target;if(tgt&&tgt.closest&&tgt.closest('input,textarea,select,[contenteditable]'))return;
+var mod=isMac?ev.metaKey:ev.ctrlKey;if(!mod||ev.altKey)return;
+var k=ev.key.toLowerCase(),focused=document.activeElement&&document.activeElement.closest&&document.activeElement.closest('.chip');
+if(k==='c'){var id=hover.chip||(focused&&focused.getAttribute('data-id'));if(id){ev.preventDefault();copyTask(id)}}
+else if(k==='v'){if(!clip||readOnly)return;ev.preventDefault();var tg=targetAt(hover.x,hover.y);if(tg)pasteAt(tg.date,tg.who);else setStatus('Point at a day in the calendar, then press '+M('V'))}
+else if(k==='z'&&!ev.shiftKey){if(readOnly)return;ev.preventDefault();undo()}});
+$('b-dup').onclick=function(){var id=editing;closeTask();duplicateTask(id)};
+$('b-copy').onclick=function(){var id=editing;closeTask();copyTask(id)};
+
+['all','fiber','garment'].forEach(function(k){$('tl-'+k).onclick=function(){tlFilter=k;['all','fiber','garment'].forEach(function(j){$('tl-'+j).classList.toggle('on',j===k)});renderTL()}});
+$('tl').addEventListener('click',function(ev){var b=ev.target.closest('[data-id]');if(b)openTask(b.getAttribute('data-id'))});
+var tlW=0,tlT=null;window.addEventListener('resize',function(){clearTimeout(tlT);tlT=setTimeout(function(){var w=$('tl').clientWidth;if(w!==tlW){tlW=w;renderTL()}},120)});
+init();render();
+function checkLocal(){var r=readLocal();if(!r||sig(fillChips(r.data))===sig(D))return;
+showBanner(r.data,'You have earlier changes that were saved only in this browser. The page is showing the shared version. Add your browser changes to it?')}
+if(inViewer){
+artifactReady=window.claude.use('artifact').then(function(ns){artifactNS=ns;artifactReady=null;if(ns)checkLocal();else{localOnly=true;loadLocal();setStatus()}}).catch(function(){artifactReady=null;loadLocal()});
+window.claude.use('downloads').then(function(ns){downloadsNS=ns;$('b-dl').hidden=!ns}).catch(function(){});
+}else{$('b-dl').hidden=false;loadLocal()}
+})();
+</script>
+</body>
+</html>
