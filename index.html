@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="light">
 <title>Arctic garments build schedule</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -10,7 +10,7 @@
 :root{--bg:#F2F4F3;--surface:#FFFFFF;--surface-2:#E9EDEB;--ink:#15202A;--ink-2:#4F5B64;--ink-3:#7F8A92;--line:rgba(21,32,42,.12);--line-2:rgba(21,32,42,.24);--accent:#1F6E8C;--ok:#2E7D4F;--warn:#9A5B12;--danger:#B3261E;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11171C;--surface:#1A2128;--surface-2:#232C34;--ink:#E6ECEF;--ink-2:#A9B4BB;--ink-3:#74808A;--line:rgba(230,236,239,.12);--line-2:rgba(230,236,239,.26);--accent:#62B3D2;--ok:#6CC08E;--warn:#E0A55A;--danger:#F2847B}}
 :root[data-theme="dark"]{--bg:#11171C;--surface:#1A2128;--surface-2:#232C34;--ink:#E6ECEF;--ink-2:#A9B4BB;--ink-3:#74808A;--line:rgba(230,236,239,.12);--line-2:rgba(230,236,239,.26);--accent:#62B3D2;--ok:#6CC08E;--warn:#E0A55A;--danger:#F2847B}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html{color-scheme:light;scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -164,7 +164,43 @@ details[open] .more svg{transform:rotate(90deg)}
 .preview{position:absolute;border:2px solid var(--accent);border-radius:6px;background:color-mix(in srgb,var(--accent) 14%,transparent);pointer-events:none;z-index:5;padding:2px 6px;font-size:11px;font-weight:600;color:var(--accent);overflow:hidden;white-space:nowrap}
 body.is-dragging,body.is-dragging *{cursor:grabbing!important;user-select:none}
 body.is-resizing,body.is-resizing *{cursor:ew-resize!important;user-select:none}
-@media (max-width:640px){.hero h1{font-size:22px}.row2{grid-template-columns:1fr}}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.agenda{display:flex;flex-direction:column}
+.aday{border-bottom:1px solid var(--line);padding:8px 10px}
+.aday:last-child{border-bottom:none}
+.aday.today{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.ahead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+.ahead .dl{font-size:13px;font-weight:600}
+.ahead .dl span{color:var(--ink-3);font-weight:400;margin-right:4px}
+.ahead .dl.today span,.ahead .dl.today{color:var(--accent)}
+.ahead button{padding:4px 10px;font-size:12px}
+.achip{display:flex;flex-direction:column;align-items:flex-start;gap:1px}
+.achip .ap{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--ink-2)}
+.aempty{font-size:12px;color:var(--ink-3);padding:2px 0 4px}
+@media (max-width:640px){.hero h1{font-size:22px}.row2{grid-template-columns:1fr}
+.wrap{padding:16px 12px 40px}
+.hero{align-items:stretch}
+.hero>div:last-child{width:100%}
+.hero>div:last-child button{flex:1 1 auto}
+.bar .title{order:-1;width:100%;flex-basis:100%;margin:0 0 4px;font-size:17px}
+input,select,textarea{font-size:16px}
+button{min-height:40px}
+.chip{min-height:0}
+.dialog{padding:16px}
+.overlay{padding:max(12px,env(safe-area-inset-top,0px)) 10px max(12px,env(safe-area-inset-bottom,0px))}
+.outrow{grid-template-columns:1fr 72px 40px}
+.prodrow,.colhead{grid-template-columns:1fr 60px 60px!important}
+.prodrow input:nth-child(4),.colhead span:nth-child(4){grid-column:1 / -1}
+.legend{gap:8px 12px}
+.made .grid,.strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+.inv h2,.tlhead h2,.chipsec.bottom h2{font-size:17px}
+.inv table{min-width:640px;font-size:13px}
+.inv th,.inv td{padding:8px}
+.inv th:first-child,.inv td:first-child{position:sticky;left:0;background:var(--surface);z-index:1}
+.inv th:first-child{background:var(--surface-2)}
+.ctx{min-width:200px}
+.ctx button{padding:10px 12px;font-size:15px}}
+@media (pointer:coarse){.chip{touch-action:manipulation;cursor:pointer;-webkit-touch-callout:none}.h-l,.h-r{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -217,7 +253,7 @@ root.innerHTML='<div class="wrap">'+
 '<div id="banner" class="banner" hidden role="status"><span id="banner-t"></span><span style="display:flex;gap:8px"><button id="bn-discard" type="button">Keep this version</button><button id="bn-use" class="primary" type="button">Use browser changes</button></span></div><section aria-label="Projected totals by delivery"><div id="strip" class="strip"></div></section>'+
 '<div class="bar"><button id="b-prev" aria-label="Previous">'+svg('left')+'</button><button id="b-next" aria-label="Next">'+svg('right')+'</button><button id="b-today">Today</button><span id="v-title" class="title"></span><span class="seg"><button id="b-week" class="on">Week</button><button id="b-month">Month</button></span></div>'+
 '<div id="legend" class="legend"></div><div id="view"></div>'+
-'<p class="note">Drag a task to move it, or drag its left or right edge to change the start or end date. Drop it on another person’s row to reassign it. Right-click a task to copy, duplicate, or delete it, then right-click any day to paste. Shortcuts: point at a task and press Ctrl+C (⌘C on Mac), point at a day and press Ctrl+V, Ctrl+Z to undo. Hold Alt (Option) while dragging to drop a copy. Click a task to edit its text. Weekends are hidden. Fiber counts are added on the draw step.</p><section class="tlsec" aria-labelledby="tl-h"><div class="tlhead"><h2 id="tl-h">Milestone timeline</h2><span class="seg" role="group" aria-label="Show milestones"><button id="tl-all" class="on" type="button">All</button><button id="tl-fiber" type="button">Fiber</button><button id="tl-garment" type="button">Garment</button></span></div><div id="tl-legend" class="legend"></div><div id="tl" class="tl"></div></section><section class="inv" aria-labelledby="inv-h"><h2 id="inv-h">Accomplished Fiber Milestones</h2><div class="scroller"><table id="inv"></table></div><p class="note">Counts go up only when a draw is done. “Have now” counts starting stock plus draws marked done. Each later column adds every draw scheduled on or before that date.</p></section><section class="inv" aria-labelledby="ginv-h"><h2 id="ginv-h">Accomplished Garment Milestones</h2><div class="scroller"><table id="ginv"></table></div><p class="note">Counts come from <span id="ginv-owner"></span>’s integration tasks, using “Garments completed by this task” in each one. A garment counts once its task is marked Done (“Have now”) or once its end date is reached (later columns).</p></section><section class="chipsec bottom" aria-labelledby="chip-h"><h2 id="chip-h">Temperature chips</h2><div id="chipgrid" class="chipgrid"></div></section></div>'+
+'<p class="note">Drag a task to move it, or drag its left or right edge to change the start or end date. Drop it on another person’s row to reassign it. Right-click a task to copy, duplicate, or delete it, then right-click any day to paste. Shortcuts: point at a task and press Ctrl+C (⌘C on Mac), point at a day and press Ctrl+V, Ctrl+Z to undo. Hold Alt (Option) while dragging to drop a copy. Click a task to edit its text. On a phone, tap a task to edit it, press and hold for copy, duplicate, or delete, and use “Paste here” on a day. Weekends are hidden. Fiber counts are added on the draw step.</p><section class="tlsec" aria-labelledby="tl-h"><div class="tlhead"><h2 id="tl-h">Milestone timeline</h2><span class="seg" role="group" aria-label="Show milestones"><button id="tl-all" class="on" type="button">All</button><button id="tl-fiber" type="button">Fiber</button><button id="tl-garment" type="button">Garment</button></span></div><div id="tl-legend" class="legend"></div><div id="tl" class="tl"></div></section><section class="inv" aria-labelledby="inv-h"><h2 id="inv-h">Accomplished Fiber Milestones</h2><div class="scroller"><table id="inv"></table></div><p class="note">Counts go up only when a draw is done. “Have now” counts starting stock plus draws marked done. Each later column adds every draw scheduled on or before that date.</p></section><section class="inv" aria-labelledby="ginv-h"><h2 id="ginv-h">Accomplished Garment Milestones</h2><div class="scroller"><table id="ginv"></table></div><p class="note">Counts come from <span id="ginv-owner"></span>’s integration tasks, using “Garments completed by this task” in each one. A garment counts once its task is marked Done (“Have now”) or once its end date is reached (later columns).</p></section><section class="chipsec bottom" aria-labelledby="chip-h"><h2 id="chip-h">Temperature chips</h2><div id="chipgrid" class="chipgrid"></div></section></div>'+
 '<div id="ctx" class="ctx" hidden role="menu"></div><div id="m-task" class="overlay" hidden><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="mt-h"><h2 id="mt-h">Edit task</h2>'+
 '<div class="f"><label for="f-who">Person in charge</label><select id="f-who"></select></div>'+
 '<div class="f"><label for="f-short">Short label (calendar)</label><input id="f-short" maxlength="60"><div id="e-short" class="err-msg"></div></div>'+
@@ -245,7 +281,21 @@ var dates=same(s,e)?fmt(s):fmt(s)+' – '+fmt(e);
 var hl='',hr='';if(days&&!readOnly&&!t.milestone){if(s>=days[0])hl='<span class="h-l" data-h="l" aria-hidden="true"></span>';if(e<=days[4])hr='<span class="h-r" data-h="r" aria-hidden="true"></span>'}
 return '<button class="chip'+(compact?' c':'')+'" data-id="'+esc(t.id)+'" title="'+esc(person(t.who).name+': '+t.text+' ('+dates+')'+(t.done?' – done':''))+'" style="'+chipStyle(t)+';'+(pos||'')+'">'+(t.done?'<span class="done">'+svg('check')+'</span>':'')+(ic?svg(ic):'')+esc(compact?t.short:t.text)+(same(s,e)?'':'<span class="dates">'+dates+'</span>')+hl+hr+'</button>'}
 
+var NARROW=window.matchMedia?window.matchMedia('(max-width: 700px)'):{matches:false};
+function agenda(mon,compact){
+var days=[0,1,2,3,4].map(function(i){return add(mon,i)}),order={};D.people.forEach(function(p,i){order[p.id]=i});
+var h='<div class="agenda" data-week="'+iso(mon)+'">';
+days.forEach(function(d,i){var td=same(d,TODAY);
+var ts=D.tasks.filter(function(t){return pd(t.start)<=d&&pd(t.end)>=d}).sort(function(a,b){return (order[a.who]-order[b.who])||(a.start<b.start?-1:1)});
+if(compact&&!ts.length)return;
+h+='<div class="aday'+(td?' today':'')+'" data-date="'+iso(d)+'"><div class="ahead"><span class="dl'+(td?' today':'')+'"><span>'+DN[i]+'</span>'+fmt(d)+(td?' (today)':'')+'</span>'+(clip&&!readOnly?'<button type="button" class="apaste" data-paste="'+iso(d)+'">Paste here</button>':'')+'</div>';
+h+=ts.length?ts.map(function(t){var p=person(t.who),s0=pd(t.start),e0=pd(t.end),multi=!same(s0,e0);
+var ic=t.milestone?'flag':(t.product&&product(t.product)?product(t.product).icon:'');
+return '<button class="chip achip'+(compact?' c':'')+'" data-id="'+esc(t.id)+'" style="'+chipStyle(t)+'"><span class="ap"><span class="dot" style="background:'+p.color+'"></span>'+esc(p.name)+(t.done?' <span class="done">'+svg('check')+'</span>':'')+'</span><span>'+(ic?svg(ic):'')+esc(compact?t.short:t.text)+'</span>'+(multi?'<span class="dates">'+fmt(s0)+' – '+fmt(e0)+'</span>':'')+'</button>'}).join(''):'<div class="aempty">No tasks</div>';
+h+='</div>'});
+return h+'</div>'}
 function lanes(mon,compact){
+if(NARROW.matches)return agenda(mon,compact);
 var days=[0,1,2,3,4].map(function(i){return add(mon,i)}),fri=days[4];
 var h='<div class="lanes" data-week="'+iso(mon)+'"><div class="lrow lhead"><div></div>';
 days.forEach(function(d,i){h+='<div class="dh"><div class="dname">'+DN[i]+'</div><span class="dnum'+(same(d,TODAY)?' today':'')+'">'+d.getDate()+'</span></div>'});
@@ -393,7 +443,7 @@ $('f-outs').innerHTML=(d.out||[]).map(outRow).join('');$('f-gouts').innerHTML=(d
 $('f-prop').checked=!!d.proposed;$('f-mile').checked=!!d.milestone;$('f-done').checked=!!d.done;$('f-ms').value=d.ms||'';
 $('e-short').textContent='';$('e-date').textContent='';
 $('b-del').hidden=!t;$('b-dup').hidden=!t;$('b-copy').hidden=!t;
-$('m-task').hidden=false;$('f-short').focus();
+$('m-task').hidden=false;if(!NARROW.matches)$('f-short').focus();else $('m-task').querySelector('.dialog').scrollIntoView();
 }
 function closeTask(){$('m-task').hidden=true;editing=null;if(lastFocus&&lastFocus.focus)lastFocus.focus()}
 $('b-add').onclick=function(){openTask(null)};
@@ -441,7 +491,7 @@ function buildHTML(){
 var css=document.getElementById('css').textContent;
 var app=document.getElementById('app').textContent;
 var json=JSON.stringify(D).replace(/</g,'\\u003c');
-return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<title>'+esc(D.title)+'</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">\n<style id="css">'+css+'</style>\n</head>\n<body>\n<div id="root"></div>\n<script id="data" type="application/json">'+json+'<\/script>\n<script id="app">'+app+'<\/script>\n</body>\n</html>\n'}
+return '<!DOCTYPE html>\n<html lang="en" data-theme="light">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="light">\n<title>'+esc(D.title)+'</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">\n<style id="css">'+css+'</style>\n</head>\n<body>\n<div id="root"></div>\n<script id="data" type="application/json">'+json+'<\/script>\n<script id="app">'+app+'<\/script>\n</body>\n</html>\n'}
 
 var saving=false,artifactReady=null,localOnly=!inViewer;
 $('b-save').onclick=function(){
@@ -496,7 +546,7 @@ p.style.left=(a.left-lr.left+2)+'px';p.style.width=(z.right-a.left-4)+'px';p.sty
 p.textContent=(drag.copy?'Copy: ':'')+(same(ns,ne)?fmt(ns):fmt(ns)+' – '+fmt(ne))+(who!==drag.t.who?', '+person(who).name:'');
 L.appendChild(p)}
 $('view').addEventListener('pointerdown',function(ev){
-if(readOnly||ev.button!==0)return;
+if(readOnly||ev.button!==0||ev.pointerType==='touch')return;
 var c=ev.target.closest('.chip');if(!c)return;
 var t=task(c.getAttribute('data-id')),L=c.closest('.lanes');if(!t||!L)return;
 var h=ev.target.closest('[data-h]');
@@ -531,7 +581,7 @@ function onCancel(){endDrag();drag=null}
 var clip=null,hover={x:null,y:null,chip:null};
 function newId(){var n=1;while(task('t'+n))n++;return 't'+n}
 function cloneTask(t){var c=JSON.parse(JSON.stringify(t));c.id=newId();delete c.done;return c}
-function copyTask(id){var t=task(id);if(!t)return;clip=JSON.parse(JSON.stringify(t));[].forEach.call(document.querySelectorAll('.chip.copied'),function(e){e.classList.remove('copied')});var el=document.querySelector('.chip[data-id="'+id+'"]');if(el)el.classList.add('copied');setStatus('Copied “'+t.short+'”. Point at a day and press '+(isMac?'⌘':'Ctrl')+'+V, or right-click a day.')}
+function copyTask(id){var t=task(id);if(!t)return;clip=JSON.parse(JSON.stringify(t));[].forEach.call(document.querySelectorAll('.chip.copied'),function(e){e.classList.remove('copied')});var el=document.querySelector('.chip[data-id="'+id+'"]');if(el)el.classList.add('copied');if(NARROW.matches){render();setStatus('Copied “'+t.short+'”. Tap “Paste here” on any day.')}else setStatus('Copied “'+t.short+'”. Point at a day and press '+(isMac?'⌘':'Ctrl')+'+V, or right-click a day.')}
 function pasteAt(date,who){if(!clip){setStatus('Copy a task first');return}if(readOnly)return;
 var dur=bizIndex(pd(clip.end))-bizIndex(pd(clip.start));
 snap();var c=cloneTask(clip);c.start=iso(date);c.end=iso(addBiz(date,Math.max(0,dur)));c.who=who||clip.who;D.tasks.push(c);markDirty();
@@ -573,6 +623,15 @@ $('b-copy').onclick=function(){var id=editing;closeTask();copyTask(id)};
 ['all','fiber','garment'].forEach(function(k){$('tl-'+k).onclick=function(){tlFilter=k;['all','fiber','garment'].forEach(function(j){$('tl-'+j).classList.toggle('on',j===k)});renderTL()}});
 $('tl').addEventListener('click',function(ev){var b=ev.target.closest('[data-id]');if(b)openTask(b.getAttribute('data-id'))});
 var tlW=0,tlT=null;window.addEventListener('resize',function(){clearTimeout(tlT);tlT=setTimeout(function(){var w=$('tl').clientWidth;if(w!==tlW){tlW=w;renderTL()}},120)});
+if(NARROW.addEventListener)NARROW.addEventListener('change',function(){render()});else if(NARROW.addListener)NARROW.addListener(function(){render()});
+$('view').addEventListener('click',function(ev){var b=ev.target.closest('[data-paste]');if(b){ev.stopPropagation();var who=clip?clip.who:D.people[0].id;pasteAt(pd(b.getAttribute('data-paste')),who)}},true);
+var lp=null;
+$('view').addEventListener('pointerdown',function(ev){if(ev.pointerType!=='touch')return;var c=ev.target.closest('.chip');if(!c)return;var x=ev.clientX,y=ev.clientY,id=c.getAttribute('data-id');
+lp={x:x,y:y,timer:setTimeout(function(){lp=null;suppress=true;setTimeout(function(){suppress=false},700);if(navigator.vibrate)try{navigator.vibrate(10)}catch(e){}
+var items=[{label:'Copy',run:function(){copyTask(id)}}];if(!readOnly){items.push({label:'Duplicate',run:function(){duplicateTask(id)}});items.push({label:'Edit…',run:function(){openTask(id)}});items.push('-');items.push({label:'Delete',run:function(){deleteTask(id)}})}
+openCtx(x,y,items)},550)}});
+['pointerup','pointercancel'].forEach(function(e){$('view').addEventListener(e,function(){if(lp){clearTimeout(lp.timer);lp=null}})});
+$('view').addEventListener('pointermove',function(ev){if(lp&&Math.abs(ev.clientX-lp.x)+Math.abs(ev.clientY-lp.y)>10){clearTimeout(lp.timer);lp=null}});
 init();render();
 function checkLocal(){var r=readLocal();if(!r||sig(fillChips(r.data))===sig(D))return;
 showBanner(r.data,'You have earlier changes that were saved only in this browser. The page is showing the shared version. Add your browser changes to it?')}
