@@ -94,6 +94,14 @@ input[type=color]{padding:2px;height:34px}
 .stripsec h2{font-size:16px;font-weight:600;margin:0}
 .stripsec p{margin:2px 0 10px;font-size:13px;color:var(--ink-2)}
 .stripsec p:empty{display:none}
+.hset{align-self:flex-start}
+.hset>summary{display:inline-block}
+.hset-btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line-2);border-radius:6px;padding:6px 12px}
+.hset-btn:hover{background:var(--surface-2)}
+.hset-btn svg{width:14px;height:14px;transition:transform .15s}
+.hset[open] .hset-btn svg{transform:rotate(180deg)}
+.hset>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.hset-body{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
 .chipsec{margin:-6px 0 22px}
 .chipsec.bottom{margin:28px 0 0}
 .chipsec.bottom h2{font-size:18px;margin-bottom:10px}
@@ -252,7 +260,7 @@ function range(){var a=null,b=null;D.tasks.forEach(function(t){var s=pd(t.start)
 var root=document.getElementById('root');
 root.innerHTML='<div class="wrap">'+
 '<header class="hero"><div><h1 id="h-title"></h1><p id="h-sub"></p></div>'+
-'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="status" class="status" role="status"></span><button id="b-add">Add task</button><button id="b-settings">People and products</button><button id="b-dl" hidden>Download HTML</button><button id="b-save" class="primary">Save changes</button></div></header>'+
+'<details class="hset"><summary><span class="hset-btn">Settings<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></summary><div class="hset-body"><span id="status" class="status" role="status"></span><button id="b-add">Add task</button><button id="b-settings">People and products</button><button id="b-dl" hidden>Download HTML</button><button id="b-save" class="primary">Save changes</button></div></details></header>'+
 '<div id="banner" class="banner" hidden role="status"><span id="banner-t"></span><span style="display:flex;gap:8px"><button id="bn-discard" type="button">Keep this version</button><button id="bn-use" class="primary" type="button">Use browser changes</button></span></div><section class="stripsec" aria-labelledby="strip-h"><h2 id="strip-h"></h2><p id="strip-note"></p><div id="strip" class="strip"></div></section>'+
 '<div class="bar"><button id="b-prev" aria-label="Previous">'+svg('left')+'</button><button id="b-next" aria-label="Next">'+svg('right')+'</button><button id="b-today">Today</button><span id="v-title" class="title"></span><span class="seg"><button id="b-week" class="on">Week</button><button id="b-month">Month</button></span></div>'+
 '<div id="legend" class="legend"></div><div id="view"></div>'+
